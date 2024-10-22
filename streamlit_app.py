@@ -5,12 +5,16 @@ from shareplum import Site
 from shareplum.site import Version
 from io import StringIO 
 
-authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
-site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie)
-sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
+@st.cache_data
+def get_authcookie():
+    return authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
 
 @st.cache_data
-def get_file_from_sharepoint(folder, filename):
+def get_file_from_sharepoint(file_name):
+    authcookie = get_authcookie()
+    site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie, verify_ssl=False)
+    sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
+
     try:
         file_content = folder.get_file(filename)
         return pd.read_csv(StringIO(file_content.decode('utf-8')), low_memory=False)
@@ -19,7 +23,6 @@ def get_file_from_sharepoint(folder, filename):
         return None
 
 naver_df = get_file_from_sharepoint(sales_folder, 'naver_all_reviews.csv')
-
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
