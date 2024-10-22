@@ -1,3 +1,4 @@
 streamlit
 pandas
 shareplum==0.5.1
+xlsxwriter
