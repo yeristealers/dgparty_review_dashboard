@@ -1,2 +1,3 @@
 streamlit
-shareplum
+pandas
+shareplum==0.5.1
