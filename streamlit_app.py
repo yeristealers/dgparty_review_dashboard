@@ -77,11 +77,22 @@ with tabs[0]:
     filtered_naver_df = naver_df.copy()
     if naver_brand_filter:
         filtered_naver_df = filtered_naver_df[filtered_naver_df["브랜드"] == naver_brand_filter]
-    if naver_date_filter:
-        #filtered_naver_df = filtered_naver_df[
-        #    pd.to_datetime(filtered_naver_df["review_date"], errors='coerce').dt.date == naver_date_filter
-        #]
-        filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
+        
+    if len(naver_date_filter) == 2:
+        start_date, end_date = naver_date_filter
+
+        # 시작일과 종료일이 같은 경우
+        if start_date == end_date:
+            filtered_naver_df = filtered_naver_df[
+                pd.to_datetime(filtered_naver_df["리뷰날짜"]) == pd.to_datetime(start_date)
+            ]
+        # 시작일과 종료일이 다른 경우 (범위 필터)
+        else:
+            filtered_naver_df = filtered_naver_df[
+                (pd.to_datetime(filtered_naver_df["리뷰날짜"]) >= pd.to_datetime(start_date)) &
+                (pd.to_datetime(filtered_naver_df["리뷰날짜"]) <= pd.to_datetime(end_date))
+            ]
+
 
     # 네이버 리뷰 데이터 다운로드 버튼
     naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8-sig')
