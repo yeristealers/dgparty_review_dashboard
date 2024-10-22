@@ -79,7 +79,7 @@ with tabs[0]:
         filtered_naver_df = filtered_naver_df[filtered_naver_df["브랜드"] == naver_brand_filter]
     if naver_date_filter:
         filtered_naver_df = filtered_naver_df[
-            pd.to_datetime(filtered_naver_df["리뷰날짜"], errors='coerce').dt.date == pd.to_datetime(naver_date_filter).date()
+            pd.to_datetime(filtered_naver_df["review_date"], errors='coerce').dt.date == naver_date_filter
         ]
         #filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
 
