@@ -27,7 +27,7 @@ naver_df = get_file_from_sharepoint('naver_all_reviews.csv')
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
-    naver_df['review_date'] = pd.to_datetime(naver_df['review_date']).dt.strftime('%Y-%m-%d')
+    naver_df['review_date'] = pd.to_datetime(naver_df['review_date']) #.dt.strftime('%Y-%m-%d')
     naver_df = naver_df.rename(columns={
         'brand_k': '브랜드',
         'channel': '채널',
@@ -78,10 +78,10 @@ with tabs[0]:
     if naver_brand_filter:
         filtered_naver_df = filtered_naver_df[filtered_naver_df["브랜드"] == naver_brand_filter]
     if naver_date_filter:
-        filtered_naver_df = filtered_naver_df[
-            pd.to_datetime(filtered_naver_df["review_date"], errors='coerce').dt.date == naver_date_filter
-        ]
-        #filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
+        #filtered_naver_df = filtered_naver_df[
+        #    pd.to_datetime(filtered_naver_df["review_date"], errors='coerce').dt.date == naver_date_filter
+        #]
+        filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
 
     # 네이버 리뷰 데이터 다운로드 버튼
     naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8-sig')
