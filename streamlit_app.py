@@ -6,6 +6,7 @@ from shareplum.site import Version
 from io import StringIO 
 import io
 from pandas import ExcelWriter
+from xlsxwriter import Workbook
 
 @st.cache_data
 def get_authcookie():
