@@ -3,6 +3,7 @@ import pandas as pd
 from shareplum import Office365
 from shareplum import Site
 from shareplum.site import Version
+from io import StringIO 
 
 authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
 site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie)
