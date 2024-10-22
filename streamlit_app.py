@@ -68,14 +68,14 @@ with tabs[0]:
         filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
 
     # 네이버 리뷰 데이터 다운로드 버튼
-    #naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8-sig')
-    #st.download_button(
-    #    label=f"네이버 {naver_brand_filter} 리뷰 데이터 다운로드",
-    #    data=naver_csv,
-    #    file_name=f'naver_{naver_brand_filter}_reviews.csv',
-    #    mime='text/csv'
-    #)
-    #st.dataframe(filtered_naver_df.head())
+    naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8-sig')
+    st.download_button(
+        label=f"네이버 {naver_brand_filter} 리뷰 데이터 다운로드",
+        data=naver_csv,
+        file_name=f'naver_{naver_brand_filter}_reviews.csv',
+        mime='text/csv'
+    )
+    st.dataframe(filtered_naver_df.head())
     
 with tabs[1]:
     st.subheader('쿠팡 리뷰 데이터 미리보기')
