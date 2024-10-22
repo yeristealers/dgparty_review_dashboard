@@ -14,7 +14,7 @@ def get_authcookie():
 def get_file_from_sharepoint(file_name):
     authcookie = get_authcookie()
     site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie, verify_ssl=False)
-    sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
+    folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
 
     try:
         file_content = folder.get_file(filename)
@@ -23,7 +23,7 @@ def get_file_from_sharepoint(file_name):
         st.error(f"Error loading file {filename}: {e}")
         return None
 
-naver_df = get_file_from_sharepoint(sales_folder)
+naver_df = get_file_from_sharepoint(folder)
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
