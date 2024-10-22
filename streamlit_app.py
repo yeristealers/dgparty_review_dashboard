@@ -95,7 +95,7 @@ with tabs[0]:
 
 
     # 네이버 리뷰 데이터 다운로드 버튼
-    naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8-sig')
+    naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8')
     st.download_button(
         label=f"네이버 {naver_brand_filter} 리뷰 데이터 다운로드",
         data=naver_csv,
