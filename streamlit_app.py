@@ -72,13 +72,16 @@ tabs = st.tabs(["네이버 리뷰"]) #, "쿠팡 리뷰"
 with tabs[0]:
     st.subheader('네이버 리뷰 데이터 미리보기')
     naver_brand_filter = st.selectbox("브랜드", options=naver_df["브랜드"].unique())
-    naver_date_filter = st.date_input("리뷰 날짜", [], errors='coerce')
+    naver_date_filter = st.date_input("리뷰 날짜", [])
 
     filtered_naver_df = naver_df.copy()
     if naver_brand_filter:
         filtered_naver_df = filtered_naver_df[filtered_naver_df["브랜드"] == naver_brand_filter]
     if naver_date_filter:
-        filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
+        filtered_naver_df = filtered_naver_df[
+            pd.to_datetime(filtered_naver_df["리뷰날짜"], errors='coerce').dt.date == pd.to_datetime(naver_date_filter).date()
+        ]
+        #filtered_naver_df = filtered_naver_df[pd.to_datetime(filtered_naver_df["리뷰날짜"]).isin(pd.to_datetime(naver_date_filter))]
 
     # 네이버 리뷰 데이터 다운로드 버튼
     naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8-sig')
