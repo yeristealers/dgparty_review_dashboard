@@ -61,7 +61,7 @@ st.write("")
 st.subheader('')
 #st.dataframe('')
 
-tabs = st.tabs(["네이버 리뷰", "쿠팡 리뷰"])
+tabs = st.tabs(["네이버 리뷰"]) #, "쿠팡 리뷰"
 with tabs[0]:
     st.subheader('네이버 리뷰 데이터 미리보기')
     naver_brand_filter = st.selectbox("브랜드", options=naver_df["브랜드"].unique())
