@@ -27,7 +27,7 @@ naver_df = get_file_from_sharepoint('naver_all_reviews.csv')
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
-    naver_df['review_date'] = pd.to_datetime(naver_df['review_date'])
+    naver_df['review_date'] = pd.to_datetime(naver_df['review_date']).dt.strftime('%Y-%m-%d')
     naver_df = naver_df.rename(columns={
         'brand_k': '브랜드',
         'channel': '채널',
@@ -72,7 +72,7 @@ tabs = st.tabs(["네이버 리뷰"]) #, "쿠팡 리뷰"
 with tabs[0]:
     st.subheader('네이버 리뷰 데이터 미리보기')
     naver_brand_filter = st.selectbox("브랜드", options=naver_df["브랜드"].unique())
-    naver_date_filter = st.date_input("리뷰 날짜", [])
+    naver_date_filter = st.date_input("리뷰 날짜", [], errors='coerce')
 
     filtered_naver_df = naver_df.copy()
     if naver_brand_filter:
@@ -88,6 +88,7 @@ with tabs[0]:
         file_name=f'naver_{naver_brand_filter}_reviews.csv',
         mime='text/csv'
     )
+    st.subheader('미리보기 (처음 5줄)')
     st.dataframe(filtered_naver_df.head())
     
 #with tabs[1]:
