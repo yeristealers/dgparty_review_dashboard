@@ -4,19 +4,10 @@ from shareplum import Office365
 from shareplum import Site
 from shareplum.site import Version
 
-# SharePoint 인증
-authcookie = Office365('https://wholesumbrands.sharepoint.com', 
-                       username='yeri@wholesumbrands.com', 
-                       password='2023June12/').GetCookies()
-
-# SharePoint 사이트에 접속
-site = Site('https://wholesumbrands.sharepoint.com/sites/yoursite', 
-            version=Version.v365, authcookie=authcookie)
-
-# 파일이 위치한 폴더에 접근
+authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
+site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie)
 sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
 
-# 파일을 가져오는 함수 (파일의 서버 상대 URL을 사용)
 def get_file_from_sharepoint(folder, filename):
     try:
         file_content = folder.get_file(filename)
@@ -25,7 +16,6 @@ def get_file_from_sharepoint(folder, filename):
         print(f"Error loading file {filename}: {e}")
         return None
 
-# 파일 가져오기
 naver_df = get_file_from_sharepoint(sales_folder, 'naver_all_reviews.csv')
 coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
 
