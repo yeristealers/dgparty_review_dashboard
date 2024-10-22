@@ -23,7 +23,7 @@ def get_file_from_sharepoint(file_name):
         st.error(f"Error loading file {filename}: {e}")
         return None
 
-naver_df = get_file_from_sharepoint(sales_folder, 'naver_all_reviews.csv')
+naver_df = get_file_from_sharepoint(sales_folder)
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
