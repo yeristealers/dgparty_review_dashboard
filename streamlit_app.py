@@ -13,7 +13,7 @@ def get_authcookie():
 @st.cache_data
 def get_file_from_sharepoint(file_name):
     authcookie = get_authcookie()
-    site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie, verify_ssl=False)
+    site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie)
     folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
 
     try:
