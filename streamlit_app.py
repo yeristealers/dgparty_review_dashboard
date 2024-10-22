@@ -7,7 +7,8 @@ from io import StringIO
 
 @st.cache_data
 def get_authcookie():
-    return authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
+    authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
+    return authcookie
 
 @st.cache_data
 def get_file_from_sharepoint(file_name):
