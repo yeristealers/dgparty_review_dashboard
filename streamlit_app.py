@@ -4,50 +4,64 @@ from shareplum import Office365
 from shareplum import Site
 from shareplum.site import Version
 
-authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
-site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365,authcookie=authcookie)
-sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
+# SharePoint 인증 및 파일 가져오기 함수
+def get_sharepoint_file(folder, file_name):
+    try:
+        file_data = folder.get_file(file_name)
+        csv_data = StringIO(file_data.decode('utf-8'))
+        return pd.read_csv(csv_data)
+    except Exception as e:
+        st.error(f"Error loading file: {file_name} - {e}")
+        return None
 
-#naver_csv_file = 'naver_all_reviews.csv'
-#naver_df = pd.read_csv(naver_csv_file, low_memory=False)
-naver_df = pd.read_csv(sales_folder.get_file('naver_all_reviews.csv'))
-naver_df = naver_df.drop(columns=['brand_e', 'review_id','date'])
-naver_df['product_code'] = naver_df['product_code'].astype(str)
-naver_df = naver_df.rename(columns={
-    'brand_k':'브랜드',
-    'channel': '채널',
-    'product_code':'상품코드',
-    'review_date': '리뷰날짜',
-    'user': '리뷰아이디',
-    'product_name':'상품명',
-    'product_option':'옵션명',
-    'rating': '점수',
-    'review_type': '리뷰타입',
-    'repurchase': '재구매',
-    'review_details': '상품평'
-})
+# SharePoint 연결 설정
+try:
+    authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
+    site = Site('https://wholesumbrands.sharepoint.com/sites/yoursite', version=Version.v365, authcookie=authcookie)
+    sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
+except Exception as e:
+    st.error(f"Error connecting to SharePoint: {e}")
 
-#coupang_csv_file = 'coupang_all_reviews.csv'
-#coupang_df = pd.read_csv(coupang_csv_file)
-coupang_df = pd.read_csv(sales_folder.get_file('coupang_all_reviews.csv'))
-coupang_df = coupang_df.drop(columns=['brand_e', 'review_id','date'])
-coupang_df['product_id'] = coupang_df['product_id'].astype(str)
-coupang_df = coupang_df.rename(columns={
-    'brand_k':'브랜드',
-    'channel': '채널',
-    'seller': '판매자',
-    'product_id':'상품코드',
-    'review_date': '리뷰날짜',
-    'user': '리뷰아이디',
-    'review_title': '리뷰제목',
-    'product_details':'상품명',
-    'product_option':'옵션명',
-    'rating': '점수',
-    'review_type': '리뷰타입',
-    'repurchase': '재구매',
-    'review_details': '상품평'
-})
+# 파일 가져오기
+naver_df = get_sharepoint_file(sales_folder, 'naver_all_reviews.csv')
+coupang_df = get_sharepoint_file(sales_folder, 'coupang_all_reviews.csv')
 
+
+if naver_df is not None:
+    naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
+    naver_df['product_code'] = naver_df['product_code'].astype(str)
+    naver_df = naver_df.rename(columns={
+        'brand_k': '브랜드',
+        'channel': '채널',
+        'product_code': '상품코드',
+        'review_date': '리뷰날짜',
+        'user': '리뷰아이디',
+        'product_name': '상품명',
+        'product_option': '옵션명',
+        'rating': '점수',
+        'review_type': '리뷰타입',
+        'repurchase': '재구매',
+        'review_details': '상품평'
+    })
+
+if coupang_df is not None:
+    coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
+    coupang_df['product_id'] = coupang_df['product_id'].astype(str)
+    coupang_df = coupang_df.rename(columns={
+        'brand_k': '브랜드',
+        'channel': '채널',
+        'seller': '판매자',
+        'product_id': '상품코드',
+        'review_date': '리뷰날짜',
+        'user': '리뷰아이디',
+        'review_title': '리뷰제목',
+        'product_details': '상품명',
+        'product_option': '옵션명',
+        'rating': '점수',
+        'review_type': '리뷰타입',
+        'repurchase': '재구매',
+        'review_details': '상품평'
+    })
 
 st.title("🐔득근파티 리뷰 대시보드🐔")
 st.write("")
