@@ -17,8 +17,6 @@ def get_file_from_sharepoint(folder, filename):
         return None
 
 naver_df = get_file_from_sharepoint(sales_folder, 'naver_all_reviews.csv')
-coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
-
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
@@ -35,7 +33,20 @@ if naver_df is not None:
         'repurchase': '재구매',
         'review_details': '상품평'
     })
+##########################
+if naver_df is not None:
+    if "브랜드" in naver_df.columns:
+        st.subheader('네이버 리뷰 데이터 미리보기')
+        naver_brand_filter = st.selectbox("브랜드", options=naver_df["브랜드"].unique())
+        st.write(naver_df.head())
+    else:
+        st.error("'브랜드' 열을 찾을 수 없습니다. CSV 파일에 '브랜드' 열이 존재하는지 확인하세요.")
+else:
+    st.error("네이버 리뷰 데이터를 로드할 수 없습니다.")
+###################
 
+
+coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
 if coupang_df is not None:
     coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
     coupang_df['product_id'] = coupang_df['product_id'].astype(str)
@@ -58,7 +69,7 @@ if coupang_df is not None:
 st.title("🐔득근파티 리뷰 대시보드🐔")
 st.write("")
 
-st.subheader('데이터 미리 보기')
+st.subheader('')
 #st.dataframe('')
 
 tabs = st.tabs(["네이버 리뷰", "쿠팡 리뷰"])
