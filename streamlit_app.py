@@ -35,25 +35,25 @@ if naver_df is not None:
         'review_details': '상품평'
     })
 
-coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
-if coupang_df is not None:
-    coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
-    coupang_df['product_id'] = coupang_df['product_id'].astype(str)
-    coupang_df = coupang_df.rename(columns={
-        'brand_k': '브랜드',
-        'channel': '채널',
-        'seller': '판매자',
-        'product_id': '상품코드',
-        'review_date': '리뷰날짜',
-        'user': '리뷰아이디',
-        'review_title': '리뷰제목',
-        'product_details': '상품명',
-        'product_option': '옵션명',
-        'rating': '점수',
-        'review_type': '리뷰타입',
-        'repurchase': '재구매',
-        'review_details': '상품평'
-    })
+#coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
+#if coupang_df is not None:
+#    coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
+#    coupang_df['product_id'] = coupang_df['product_id'].astype(str)
+#    coupang_df = coupang_df.rename(columns={
+#        'brand_k': '브랜드',
+#        'channel': '채널',
+#        'seller': '판매자',
+#        'product_id': '상품코드',
+#        'review_date': '리뷰날짜',
+#        'user': '리뷰아이디',
+#        'review_title': '리뷰제목',
+#        'product_details': '상품명',
+#        'product_option': '옵션명',
+#        'rating': '점수',
+#        'review_type': '리뷰타입',
+#        'repurchase': '재구매',
+#        'review_details': '상품평'
+#    })
 
 st.title("🐔득근파티 리뷰 대시보드🐔")
 st.write("")
@@ -83,20 +83,20 @@ with tabs[0]:
     )
     st.dataframe(filtered_naver_df.head())
     
-with tabs[1]:
-    st.subheader('쿠팡 리뷰 데이터 미리보기')
-    coupang_brand_filter = st.selectbox("브랜드", options=coupang_df["브랜드"].unique())
-    coupang_date_filter = st.date_input("리뷰날짜", [])
+#with tabs[1]:
+#    st.subheader('쿠팡 리뷰 데이터 미리보기')
+#    coupang_brand_filter = st.selectbox("브랜드", options=coupang_df["브랜드"].unique())
+#    coupang_date_filter = st.date_input("리뷰날짜", [])
 
     # 필터 적용
-    filtered_coupang_df = coupang_df.copy()
-    if coupang_brand_filter:
-        filtered_coupang_df = filtered_coupang_df[filtered_coupang_df["브랜드"] == coupang_brand_filter]
-    if coupang_date_filter:
-        filtered_coupang_df = filtered_coupang_df[pd.to_datetime(filtered_coupang_df["리뷰날짜"]).isin(pd.to_datetime(coupang_date_filter))]
+#    filtered_coupang_df = coupang_df.copy()
+#    if coupang_brand_filter:
+#        filtered_coupang_df = filtered_coupang_df[filtered_coupang_df["브랜드"] == coupang_brand_filter]
+#    if coupang_date_filter:
+#        filtered_coupang_df = filtered_coupang_df[pd.to_datetime(filtered_coupang_df["리뷰날짜"]).isin(pd.to_datetime(coupang_date_filter))]
 
     # 필터링된 쿠팡 데이터 출력
-    st.dataframe(filtered_coupang_df)
+#    st.dataframe(filtered_coupang_df)
 
 # 브랜드, 채널, 날짜 필터 옵션
 #st.sidebar.header("필터 옵션")
