@@ -13,11 +13,11 @@ def get_file_from_sharepoint(folder, filename):
         file_content = folder.get_file(filename)
         return pd.read_csv(StringIO(file_content.decode('utf-8')))
     except Exception as e:
-        print(f"Error loading file {filename}: {e}")
+        st.error(f"Error loading file {filename}: {e}")
         return None
 
-#naver_df = get_file_from_sharepoint(sales_folder, 'naver_all_reviews.csv')
-naver_df = pd.read_csv(sales_folder.get_file('naver_all_reviews.xlsx'))
+naver_df = get_file_from_sharepoint(sales_folder, 'naver_all_reviews.csv')
+#naver_df = pd.read_csv(sales_folder.get_file('naver_all_reviews.xlsx'))
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
     naver_df['product_code'] = naver_df['product_code'].astype(str)
@@ -35,8 +35,8 @@ if naver_df is not None:
         'review_details': '상품평'
     })
 
-#coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
-coupang_df = pd.read_csv(sales_folder.get_file('coupang_all_reviews.xlsx'))
+coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
+#coupang_df = pd.read_csv(sales_folder.get_file('coupang_all_reviews.xlsx'))
 if coupang_df is not None:
     coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
     coupang_df['product_id'] = coupang_df['product_id'].astype(str)
