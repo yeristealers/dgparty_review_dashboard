@@ -4,6 +4,8 @@ from shareplum import Office365
 from shareplum import Site
 from shareplum.site import Version
 from io import StringIO 
+import io
+from pandas import ExcelWriter
 
 @st.cache_data
 def get_authcookie():
@@ -95,13 +97,29 @@ with tabs[0]:
 
 
     # 네이버 리뷰 데이터 다운로드 버튼
-    naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8')
+    #naver_csv = filtered_naver_df.to_csv(index=False, encoding='utf-8')
+    #st.download_button(
+    #    label=f"네이버 {naver_brand_filter} 리뷰 데이터 다운로드",
+    #    data=naver_csv,
+    #    file_name=f'naver_{naver_brand_filter}_reviews.csv',
+    #    mime='text/csv'
+    #)
+
+    # 네이버 리뷰 데이터 다운로드 버튼 (XLSX 형식)
+    buffer = io.BytesIO()
+    with ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        filtered_naver_df.to_excel(writer, index=False, sheet_name='Sheet1')
+    buffer.seek(0)
+    
     st.download_button(
-        label=f"네이버 {naver_brand_filter} 리뷰 데이터 다운로드",
-        data=naver_csv,
-        file_name=f'naver_{naver_brand_filter}_reviews.csv',
-        mime='text/csv'
+        label=f"네이버 {naver_brand_filter} 리뷰 데이터 다운로드 (XLSX)",
+        data=buffer,
+        file_name=f'naver_{naver_brand_filter}_reviews.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
+
+
+    
     st.subheader('미리보기 (처음 5줄)')
     st.dataframe(filtered_naver_df.head())
     
