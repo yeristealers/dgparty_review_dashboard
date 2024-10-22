@@ -1,8 +1,16 @@
 import streamlit as st
 import pandas as pd
+from shareplum import Office365
+from shareplum import Site
+from shareplum.site import Version
 
-naver_csv_file = 'naver_all_reviews.csv'
-naver_df = pd.read_csv(naver_csv_file, low_memory=False)
+authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
+site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365,authcookie=authcookie)
+sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
+
+#naver_csv_file = 'naver_all_reviews.csv'
+#naver_df = pd.read_csv(naver_csv_file, low_memory=False)
+naver_df = pd.read_csv(sales_folder.get_file('naver_all_reviews.csv'))
 naver_df = naver_df.drop(columns=['brand_e', 'review_id','date'])
 naver_df['product_code'] = naver_df['product_code'].astype(str)
 naver_df = naver_df.rename(columns={
@@ -19,8 +27,9 @@ naver_df = naver_df.rename(columns={
     'review_details': '상품평'
 })
 
-coupang_csv_file = 'coupang_all_reviews.csv'
-coupang_df = pd.read_csv(coupang_csv_file)
+#coupang_csv_file = 'coupang_all_reviews.csv'
+#coupang_df = pd.read_csv(coupang_csv_file)
+coupang_df = pd.read_csv(sales_folder.get_file('coupang_all_reviews.csv'))
 coupang_df = coupang_df.drop(columns=['brand_e', 'review_id','date'])
 coupang_df['product_id'] = coupang_df['product_id'].astype(str)
 coupang_df = coupang_df.rename(columns={
