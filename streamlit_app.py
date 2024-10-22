@@ -4,28 +4,13 @@ from shareplum import Office365
 from shareplum import Site
 from shareplum.site import Version
 
-# SharePoint 인증 및 파일 가져오기 함수
-def get_sharepoint_file(folder, file_name):
-    try:
-        file_data = folder.get_file(file_name)
-        csv_data = StringIO(file_data.decode('utf-8'))
-        return pd.read_csv(csv_data)
-    except Exception as e:
-        st.error(f"Error loading file: {file_name} - {e}")
-        return None
-
-# SharePoint 연결 설정
-try:
-    authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
-    site = Site('https://wholesumbrands.sharepoint.com/sites/yoursite', version=Version.v365, authcookie=authcookie)
-    sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
-except Exception as e:
-    st.error(f"Error connecting to SharePoint: {e}")
+authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@wholesumbrands.com', password='2023June12/').GetCookies()
+site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365,authcookie=authcookie)
+sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
 
 # 파일 가져오기
-naver_df = get_sharepoint_file(sales_folder, 'naver_all_reviews.csv')
-coupang_df = get_sharepoint_file(sales_folder, 'coupang_all_reviews.csv')
-
+naver_df = pd.read_csv(sales_folder.get_file('naver_all_reviews.csv'))
+coupang_df = pd.read_csv(sales_folder.get_file('coupang_all_reviews.csv'))
 
 if naver_df is not None:
     naver_df = naver_df.drop(columns=['brand_e', 'review_id', 'date'])
