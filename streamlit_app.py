@@ -17,10 +17,10 @@ def get_file_from_sharepoint(file_name):
     folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
 
     try:
-        file_content = folder.get_file(filename)
+        file_content = folder.get_file(file_name)
         return pd.read_csv(StringIO(file_content.decode('utf-8')), low_memory=False)
     except Exception as e:
-        st.error(f"Error loading file {filename}: {e}")
+        st.error(f"Error loading file {file_name}: {e}")
         return None
 
 naver_df = get_file_from_sharepoint('naver_all_reviews.csv')
