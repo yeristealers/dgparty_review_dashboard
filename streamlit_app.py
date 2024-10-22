@@ -9,6 +9,7 @@ authcookie = Office365('https://wholesumbrands.sharepoint.com', username='yeri@w
 site = Site('https://wholesumbrands.sharepoint.com/sites/data_auto', version=Version.v365, authcookie=authcookie)
 sales_folder = site.Folder('Shared Documents/Sales/DS Team/Raw/Archive')
 
+@st.cache_data
 def get_file_from_sharepoint(folder, filename):
     try:
         file_content = folder.get_file(filename)
