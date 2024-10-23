@@ -45,7 +45,7 @@ if naver_df is not None:
         'review_details': '상품평'
     })
 
-coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews_20241023.csv')
+coupang_df = get_file_from_sharepoint('coupang_all_reviews_20241023.csv')
 if coupang_df is not None:
     coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
     coupang_df['product_id'] = coupang_df['product_id'].astype(str)
