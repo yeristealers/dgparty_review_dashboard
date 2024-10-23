@@ -45,25 +45,25 @@ if naver_df is not None:
         'review_details': '상품평'
     })
 
-#coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews.csv')
-#if coupang_df is not None:
-#    coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
-#    coupang_df['product_id'] = coupang_df['product_id'].astype(str)
-#    coupang_df = coupang_df.rename(columns={
-#        'brand_k': '브랜드',
-#        'channel': '채널',
-#        'seller': '판매자',
-#        'product_id': '상품코드',
-#        'review_date': '리뷰날짜',
-#        'user': '리뷰아이디',
-#        'review_title': '리뷰제목',
-#        'product_details': '상품명',
-#        'product_option': '옵션명',
-#        'rating': '점수',
-#        'review_type': '리뷰타입',
-#        'repurchase': '재구매',
-#        'review_details': '상품평'
-#    })
+coupang_df = get_file_from_sharepoint(sales_folder, 'coupang_all_reviews_20241023.csv')
+if coupang_df is not None:
+    coupang_df = coupang_df.drop(columns=['brand_e', 'review_id', 'date'])
+    coupang_df['product_id'] = coupang_df['product_id'].astype(str)
+    coupang_df = coupang_df.rename(columns={
+        'brand_k': '브랜드',
+        'channel': '채널',
+        'seller': '판매자',
+        'product_id': '상품코드',
+        'review_date': '리뷰날짜',
+        'user': '리뷰아이디',
+        'review_title': '리뷰제목',
+        'product_details': '상품명',
+        'product_option': '옵션명',
+        'rating': '점수',
+        'review_type': '리뷰타입',
+        'repurchase': '재구매',
+        'review_details': '상품평'
+    })
 
 st.title("🐔득근파티 리뷰 대시보드🐔")
 st.write("")
@@ -124,17 +124,45 @@ with tabs[0]:
     st.subheader('미리보기 (처음 5줄)')
     st.dataframe(filtered_naver_df.head())
     
-#with tabs[1]:
-#    st.subheader('쿠팡 리뷰 데이터 미리보기')
-#    coupang_brand_filter = st.selectbox("브랜드", options=coupang_df["브랜드"].unique())
-#    coupang_date_filter = st.date_input("리뷰날짜", [])
+with tabs[1]:
+    st.subheader('쿠팡 리뷰 데이터 미리보기')
+    coupang_brand_filter = st.selectbox("브랜드", options=coupang_df["브랜드"].unique())
+    coupang_date_filter = st.date_input("리뷰날짜", [])
 
     # 필터 적용
-#    filtered_coupang_df = coupang_df.copy()
-#    if coupang_brand_filter:
-#        filtered_coupang_df = filtered_coupang_df[filtered_coupang_df["브랜드"] == coupang_brand_filter]
-#    if coupang_date_filter:
-#        filtered_coupang_df = filtered_coupang_df[pd.to_datetime(filtered_coupang_df["리뷰날짜"]).isin(pd.to_datetime(coupang_date_filter))]
+    filtered_coupang_df = coupang_df.copy()
+    if coupang_brand_filter:
+        filtered_coupang_df = filtered_coupang_df[filtered_coupang_df["브랜드"] == coupang_brand_filter]
+    if len(coupang_date_filter) == 2:
+        start_date, end_date = coupang_date_filter
+
+        # 시작일과 종료일이 같은 경우
+        if start_date == end_date:
+            filtered_coupang_df = filtered_coupang_df[
+                pd.to_datetime(filtered_coupang_df["리뷰날짜"]) == pd.to_datetime(start_date)
+            ]
+        # 시작일과 종료일이 다른 경우 (범위 필터)
+        else:
+            filtered_coupang_df = filtered_coupang_df[
+                (pd.to_datetime(filtered_coupang_df["리뷰날짜"]) >= pd.to_datetime(start_date)) &
+                (pd.to_datetime(filtered_coupang_df["리뷰날짜"]) <= pd.to_datetime(end_date))
+            ]
+
+    # 쿠팡 리뷰 데이터 다운로드 버튼 (XLSX 형식)
+    buffer = io.BytesIO()
+    with ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        filtered_coupang_df.to_excel(writer, index=False, sheet_name='Sheet1')
+    buffer.seek(0)
+    
+    st.download_button(
+        label=f"쿠팡 {coupang_brand_filter} 리뷰 데이터 다운로드 (XLSX)",
+        data=buffer,
+        file_name=f'coupang_{coupang_brand_filter}_reviews.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+    st.subheader('미리보기 (처음 5줄)')
+    st.dataframe(coupang_brand_filter.head())
 
     # 필터링된 쿠팡 데이터 출력
 #    st.dataframe(filtered_coupang_df)
